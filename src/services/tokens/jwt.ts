@@ -1,9 +1,9 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { TokenErr } from "../../errors/TokenErr.ts";
 
-export class JWT {
+export class Jwt {
   static secret = Deno.env.get("SECRET_JWT");
-  static expiresIn = "1w";
+  static expires_in = "1w";
 
   static verify(token: string) {
     if (!this.secret) throw new TypeError("No ha init SECRET (.env)");
@@ -18,8 +18,9 @@ export class JWT {
   static sign(payload: object, options?: SignOptions) {
     if (!this.secret) throw new TypeError("No ha init SECRET (.env)");
 
+    // @ts-ignore: Deno is 🙄
     return jwt.sign(payload, this.secret, {
-      expiresIn: this.expiresIn,
+      expiresIn: this.expires_in,
       ...options,
     });
   }

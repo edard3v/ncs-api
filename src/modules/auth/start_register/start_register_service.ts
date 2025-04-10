@@ -1,17 +1,17 @@
 import { db } from "../../../db/db.ts";
 import { EmailErr } from "../../../errors/EmailErr.ts";
 import { Encrypt } from "../../../services/encrypt/encrypt.ts";
-import { JWT } from "../../../services/tokens/jwt.ts";
+import { Jwt } from "../../../services/tokens/jwt.ts";
 import { send_mail_to_verify_register } from "./send_mail_to_verify_register.ts";
 import { StartRegisterDto } from "./start_register_dto.ts";
 
 export const start_register_service = async (credentials: StartRegisterDto) => {
-  await checkEmail(credentials.email);
+  await check_email(credentials.email);
 
   const newAccount = { ...credentials };
   newAccount.password = Encrypt.hash(newAccount.password);
 
-  const token = JWT.sign(newAccount, {
+  const token = Jwt.sign(newAccount, {
     expiresIn: "20m",
   });
 
@@ -19,7 +19,7 @@ export const start_register_service = async (credentials: StartRegisterDto) => {
   await send_mail_to_verify_register(newAccount.email, link);
 };
 
-const checkEmail = async (email: string) => {
+const check_email = async (email: string) => {
   const account = await db.query.accounts.findFirst({
     where: (accounts, { eq }) => eq(accounts.email, email),
   });

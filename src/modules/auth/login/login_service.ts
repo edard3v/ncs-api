@@ -2,7 +2,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { db } from "../../../db/db.ts";
 import { LoginErr } from "../../../errors/LoginErr.ts";
 import { Encrypt } from "../../../services/encrypt/encrypt.ts";
-import { JWT } from "../../../services/tokens/jwt.ts";
+import { Jwt } from "../../../services/tokens/jwt.ts";
 import { LoginDto } from "./login_dto.ts";
 import { UUID } from "node:crypto";
 import { Role } from "../../../db/enums/Role.ts";
@@ -16,11 +16,10 @@ export const login_service = async (login: LoginDto) => {
   const isLogged = Encrypt.compare(login.password, account.password);
   if (!isLogged) throw new LoginErr();
 
-  const token = JWT.sign({
+  const token = Jwt.sign({
     id: account.id,
     role: account.role,
-    img: account.img,
-    name: account.name,
+    img: account.img_url,
     email: account.email,
   });
 
@@ -30,7 +29,6 @@ export const login_service = async (login: LoginDto) => {
 export interface TokenPayload extends JwtPayload {
   id: UUID;
   role: Role;
-  name: string;
-  img: string;
+  img_url: string;
   email: string;
 }

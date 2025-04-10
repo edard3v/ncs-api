@@ -9,7 +9,7 @@ export const accounts = pgTable("accounts", {
   role: text({ enum: [Role.admin, Role.client, Role.seller] }).default(Role.client),
   email: text().unique().notNull(),
   is_active: boolean().notNull().default(true),
-  img: text(),
+  img_url: text(),
   password: text().notNull(),
 
   created_at: text().default(sql`(CURRENT_TIMESTAMP)`),

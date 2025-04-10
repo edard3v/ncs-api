@@ -1,7 +1,7 @@
 import type { MiddlewareHandler } from "hono";
 import type { JwtPayload } from "jsonwebtoken";
 import { Unauthorized } from "../errors/Unauthorized.ts";
-import { JWT } from "../services/tokens/jwt.ts";
+import { Jwt } from "../services/tokens/jwt.ts";
 import { BearerErr } from "../errors/BearerErr.ts";
 
 export const verify_auth: MiddlewareHandler<T> = async (context, next) => {
@@ -12,7 +12,7 @@ export const verify_auth: MiddlewareHandler<T> = async (context, next) => {
   if (prefix !== "Bearer") throw new BearerErr();
   if (!token) throw new Unauthorized();
 
-  const tokenPayload = JWT.verify(token) as JwtPayload;
+  const tokenPayload = Jwt.verify(token) as JwtPayload;
 
   context.set("tokenPayload", tokenPayload);
 
