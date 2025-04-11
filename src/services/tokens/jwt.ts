@@ -3,7 +3,7 @@ import { TokenErr } from "../../errors/TokenErr.ts";
 
 export class Jwt {
   static secret = Deno.env.get("SECRET_JWT");
-  static expires_in = "1w";
+  static expires_in = "1w" as const;
 
   static verify(token: string) {
     if (!this.secret) throw new TypeError("No ha init SECRET (.env)");
@@ -18,7 +18,6 @@ export class Jwt {
   static sign(payload: object, options?: SignOptions) {
     if (!this.secret) throw new TypeError("No ha init SECRET (.env)");
 
-    // @ts-ignore: Deno is 🙄
     return jwt.sign(payload, this.secret, {
       expiresIn: this.expires_in,
       ...options,
