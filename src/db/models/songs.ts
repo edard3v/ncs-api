@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
-import { bigint, integer, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
-import { authors } from "@db/models/authors.ts";
+import { integer, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { authors } from "./authors.ts";
 
 export const songs = pgTable("songs", {
   id: uuid()
@@ -10,7 +10,7 @@ export const songs = pgTable("songs", {
   name: varchar({ length: 255 }).unique().notNull(),
   song_url: text().notNull(),
   duration: integer().notNull(), // representa el tiempo en segundos
-  likes: bigint({ mode: "bigint" }).default(0n),
+  likes: integer().default(0),
   img_url: text().notNull(),
 
   created_at: text().default(sql`(CURRENT_TIMESTAMP)`),

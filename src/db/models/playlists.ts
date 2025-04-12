@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
-import { accounts } from "@db/models/accounts.ts";
+import { accounts } from "./accounts.ts";
 
 export const playlists = pgTable("playlists", {
   id: uuid()

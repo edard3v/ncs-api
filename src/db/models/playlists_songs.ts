@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { pgTable, primaryKey, text, uuid } from "drizzle-orm/pg-core";
-import { playlists } from "@db/models/playlists.ts";
-import { songs } from "@db/models/songs.ts";
+import { playlists } from "./playlists.ts";
+import { songs } from "./songs.ts";
 
 export const playlists_songs = pgTable(
   "playlists_songs",
