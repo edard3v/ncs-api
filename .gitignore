@@ -1,6 +1,5 @@
 node_modules
 src/db/migrations
-src/db/ncs.db
 
 # Ignorar caché de Deno
 /deno.lock
