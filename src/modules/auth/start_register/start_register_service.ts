@@ -8,15 +8,15 @@ import { EmailErr } from "@errors/EmailErr.ts";
 export const start_register_service = async (credentials: StartRegisterDto) => {
   await check_email(credentials.email);
 
-  const newAccount = { ...credentials };
-  newAccount.password = Encrypt.hash(newAccount.password);
+  const new_account = { ...credentials };
+  new_account.password = Encrypt.hash(new_account.password);
 
-  const token = Jwt.sign(newAccount, {
+  const token = Jwt.sign(new_account, {
     expiresIn: "20m",
   });
 
   const link = `${Deno.env.get("API_BASE_URL")}/end_register/${token}`;
-  await send_mail_to_verify_register(newAccount.email, link);
+  await send_mail_to_verify_register(new_account.email, link);
 };
 
 const check_email = async (email: string) => {
