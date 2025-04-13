@@ -7,7 +7,7 @@ export const authors = pgTable("authors", {
     .default(sql`gen_random_uuid()`),
 
   name: varchar({ length: 255 }).unique().notNull(),
-  img_url: text(),
+  img_url: text().notNull(),
 
   created_at: text().default(sql`(CURRENT_TIMESTAMP)`),
   updated_at: text().$onUpdate(() => sql`(CURRENT_TIMESTAMP)`),

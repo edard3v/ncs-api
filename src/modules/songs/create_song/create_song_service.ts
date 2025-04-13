@@ -5,12 +5,12 @@ import { Cloudinary } from "@services/clodinary/cloudinary.ts";
 import { CloudinaryErr } from "@errors/CloudinaryErr.ts";
 
 export const create_song_service = async (params: CreateSongDto) => {
+  const { duration, name, img_file, song_file, author_id } = params;
+
   let img_url = "";
   let song_url = "";
 
   try {
-    const { duration, name, img_file, song_file, author_id } = params;
-
     const [p1, p2] = await Promise.allSettled([
       Cloudinary.upload(img_file, "ncs/imgs"),
       Cloudinary.upload(song_file, "ncs/songs"),

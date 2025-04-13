@@ -7,7 +7,7 @@ export const create_song_dto = z
   .object({
     name: z.string().min(1).max(255),
     song_file: song_file_zod,
-    duration: z.number(),
+    duration: z.coerce.number(),
     img_file: img_file_zod,
     author_id: uuid_zod,
   })
