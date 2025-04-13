@@ -6,4 +6,9 @@ export const AUTHORS: InsertAuthors[] = [
     name: "ROSE",
     img_url: "www.rose.com",
   },
+  {
+    id: "aa200000-0000-0000-0000-000000000000",
+    name: "You Suffer",
+    img_url: "www.you.com",
+  },
 ];
