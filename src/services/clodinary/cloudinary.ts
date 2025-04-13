@@ -1,6 +1,5 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, ResourceType } from "cloudinary";
 import { ResCloudinary } from "./types.ts";
-import { CloudinaryUrlErr } from "@errors/CloudinaryUrlErr.ts";
 
 cloudinary.config({
   cloud_name: Deno.env.get("CLOUDINARY_CLOUD_NAME")!,
@@ -56,24 +55,9 @@ export class Cloudinary {
     return upload_result as ResCloudinary;
   }
 
-  static async destroy(url: string) {
-    const new_url = new URL(url);
-    const public_id = new_url.searchParams.get("public_id");
-    if (!public_id) throw new CloudinaryUrlErr();
-
+  static async destroy(public_id: string, resource_type: ResourceType) {
     return await cloudinary.uploader.destroy(public_id, {
-      resource_type: "image",
+      resource_type,
     });
-  }
-
-  static async destroy_by_url(url: string, folder: string) {
-    const name = url.split("/").at(-1)?.split(".")[0];
-    const public_id = `${folder}/${name}`;
-
-    const result = await cloudinary.uploader.destroy(public_id, {
-      resource_type: "image",
-    });
-
-    return result;
   }
 }
