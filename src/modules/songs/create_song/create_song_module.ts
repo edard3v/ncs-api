@@ -10,6 +10,7 @@ export const create_song_module = new Hono();
 
 create_song_module.post(
   "/",
+
   verify_auth,
   verify_role(Role.admin),
   zValidator("form", create_song_dto),

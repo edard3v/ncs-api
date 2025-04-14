@@ -12,9 +12,11 @@ export const delete_song_module = new Hono();
 
 delete_song_module.delete(
   ":id",
+
   verify_auth,
   verify_role(Role.admin),
   zValidator("param", z.object({ id: uuid_zod })),
+
   async (context) => {
     const { id } = context.req.valid("param");
     await delete_song_service(id as UUID);
