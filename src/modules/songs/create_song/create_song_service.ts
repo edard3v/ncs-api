@@ -23,7 +23,9 @@ export const create_song_service = async (params: CreateSongDto) => {
     img_url = p1.value.public_id;
     song_url = p2.value.public_id;
 
-    await db.insert(songs).values({ duration, name, img_url, song_url, author_id });
+    await db
+      .insert(songs)
+      .values({ duration, name: name.toLocaleLowerCase(), img_url, song_url, author_id });
   } catch (error) {
     await Promise.allSettled([
       img_url && Cloudinary.destroy(img_url, "image"),
