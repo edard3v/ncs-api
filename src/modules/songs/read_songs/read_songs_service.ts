@@ -1,11 +1,11 @@
 import { db } from "@db/db.ts";
 import { songs } from "@db/schema.ts";
-import { ReadSongDto } from "@modules/songs/read_song/read_song_dto.ts";
 import { and, eq } from "drizzle-orm";
 import { Record404 } from "@errors/Record404.ts";
 import { PageErr } from "@errors/PageErr.ts";
+import { ReadSongsDto } from "@modules/songs/read_songs/read_songs_dto.ts";
 
-export const read_song_service = async (params: ReadSongDto) => {
+export const read_songs_service = async (params: ReadSongsDto) => {
   const { name, author_id, page = 1, limit = 10 } = params;
 
   const where = [

@@ -1,22 +1,22 @@
 import { Hono } from "hono";
-import { read_song_service } from "@modules/songs/read_song/read_song_service.ts";
 import { zValidator } from "@hono/zod-validator";
-import { read_song_dto } from "@modules/songs/read_song/read_song_dto.ts";
 import { verify_auth } from "@middlewares/verify_auth.ts";
 import { verify_role } from "@middlewares/verify_role.ts";
 import { Role } from "@db/enums/Role.ts";
+import { read_songs_service } from "@modules/songs/read_songs/read_songs_service.ts";
+import { read_songs_dto } from "@modules/songs/read_songs/read_songs_dto.ts";
 
-export const read_song_module = new Hono();
+export const read_songs_module = new Hono();
 
-read_song_module.get(
+read_songs_module.get(
   "/",
   verify_auth,
   verify_role(Role.admin),
-  zValidator("query", read_song_dto),
+  zValidator("query", read_songs_dto),
 
   async (context) => {
     const queries = context.req.valid("query");
-    const records = await read_song_service(queries);
+    const records = await read_songs_service(queries);
     return context.json(records);
   }
 );
