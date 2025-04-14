@@ -9,6 +9,7 @@ import { not_found_handler } from "@app/not_found_handler.ts";
 import { err_handler } from "@app/err_handler.ts";
 import { create_song_module } from "@modules/songs/create_song/create_song_module.ts";
 import { read_songs_module } from "@modules/songs/read_songs/read_songs_module.ts";
+import { delete_song_module } from "@modules/songs/delete_song/delete_song_module.ts";
 
 export const app = new Hono();
 
@@ -26,6 +27,7 @@ app.route("/login", login_module);
 app.route("/refresh_login", refresh_login_module);
 app.route("/create_song", create_song_module);
 app.route("/read_songs", read_songs_module);
+app.route("/delete_song", delete_song_module);
 
 app.notFound(not_found_handler);
 app.onError(err_handler);
