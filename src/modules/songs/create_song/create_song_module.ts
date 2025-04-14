@@ -17,6 +17,8 @@ create_song_module.post(
   async (context) => {
     const dto = context.req.valid("form");
     await create_song_service(dto);
+
+    context.status(201);
     return context.json({ msg: "Canción creada correctamente" });
   }
 );

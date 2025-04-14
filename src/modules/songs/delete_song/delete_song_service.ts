@@ -15,7 +15,7 @@ export const delete_song_service = async (song_id: UUID) => {
       await Promise.all(
         [
           song.img_url && Cloudinary.destroy(song.img_url, "image"),
-          song.song_url && Cloudinary.destroy(song.song_url, "raw"),
+          song.song_url && Cloudinary.destroy(song.song_url, "video"),
         ].filter(Boolean)
       );
     } catch {

@@ -29,7 +29,7 @@ export const create_song_service = async (params: CreateSongDto) => {
   } catch (error) {
     await Promise.allSettled([
       img_url && Cloudinary.destroy(img_url, "image"),
-      song_url && Cloudinary.destroy(song_url, "raw"),
+      song_url && Cloudinary.destroy(song_url, "video"),
     ]);
 
     throw error;
