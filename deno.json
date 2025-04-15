@@ -27,7 +27,7 @@
     "jsonwebtoken": "npm:jsonwebtoken@9.0.2",
     "@ts-rex/bcrypt": "jsr:@ts-rex/bcrypt@1.0.3",
 
-    "@neondatabase/serverless": "npm:@neondatabase/serverless@1.0.0",
+    "@neon/serverless": "jsr:@neon/serverless@1.0.0",
     "pg": "npm:pg@8.14.1",
     "drizzle-orm": "npm:drizzle-orm@0.41.0",
     "drizzle-kit": "npm:drizzle-kit@0.30.6",
