@@ -6,5 +6,5 @@ export const CORS = cors({
   origin: ["*"],
   allowMethods: ["POST", "GET", "UPDATE", "PUT", "DELETE"],
   maxAge: 600,
-  credentials: true,
+  credentials: false,
 });
