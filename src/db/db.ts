@@ -7,8 +7,10 @@ import { IS_PRODUCTION } from "../app/config.ts";
 import * as schema from "./schema.ts";
 // import * as relations from "./relations.ts";
 
+const sql_local = new pg.Pool({ connectionString: DATABASE_URL });
+const sql_remote = neon(DATABASE_URL);
 const config = { schema: { ...schema } };
 
 export const db = !IS_PRODUCTION
-  ? drizzle_local(new pg.Pool({ connectionString: DATABASE_URL }), config)
-  : drizzle_remote(neon(DATABASE_URL), config);
+  ? drizzle_local(sql_local, config)
+  : drizzle_remote(sql_remote, config);
