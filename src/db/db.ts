@@ -1,7 +1,7 @@
 import pg from "pg";
 import { drizzle as drizzle_remote } from "drizzle-orm/neon-http";
 import { drizzle as drizzle_local } from "drizzle-orm/node-postgres";
-import { neon } from "@neon/serverless";
+import { neon } from "@neondatabase/serverless";
 import { DATABASE_URL } from "../../drizzle.config.ts";
 import { IS_PRODUCTION } from "../app/config.ts";
 import * as schema from "./schema.ts";
