@@ -7,6 +7,7 @@ import { start_register_module } from "@/modules/auth/start_register/start_regis
 import { end_register_module } from "@/modules/auth/end_register/end_register_module.ts";
 import { login_module } from "@/modules/auth/login/login_module.ts";
 import { refresh_login_module } from "@/modules/auth/refresh_login/refresh_login_module.ts";
+import { create_author_module } from "@/modules/authors/create_author_module.ts";
 
 export const app = new Hono();
 
@@ -22,6 +23,8 @@ app.route("/start_register", start_register_module);
 app.route("/end_register", end_register_module);
 app.route("/login", login_module);
 app.route("/refresh_login", refresh_login_module);
+
+app.route("/create_author", create_author_module);
 
 app.notFound(not_found_handler);
 app.onError(err_handler);

@@ -8,6 +8,8 @@
 
     "@libsql/client": "npm:@libsql/client@0.17.3",
 
+    "cloudinary": "npm:cloudinary@2.10.0",
+
     "jsonwebtoken": "npm:jsonwebtoken@9.0.3",
     "@types/jsonwebtoken": "npm:@types/jsonwebtoken@9.0.10",
     "@ts-rex/bcrypt": "jsr:@ts-rex/bcrypt@1.0.3",
