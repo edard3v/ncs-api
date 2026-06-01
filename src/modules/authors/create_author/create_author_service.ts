@@ -1,4 +1,4 @@
-import { CreateAuthorDto } from "@/modules/authors/create_author_dto.ts";
+import { CreateAuthorDto } from "@/modules/authors/create_author/create_author_dto.ts";
 
 import { db } from "@/db/db.ts";
 import { Cloudinary } from "@/services/cloudinary/cloudinary.ts";

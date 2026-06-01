@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { create_author_service } from "@/modules/authors/create_author_service.ts";
+import { create_author_service } from "@/modules/authors/create_author/create_author_service.ts";
 import { verify_auth } from "@/middlewares/verify_auth.ts";
 import { verify_role } from "@/middlewares/verify_role.ts";
 import { Role } from "@/enums/Role.ts";
 import { zValidator } from "@hono/zod-validator";
-import { create_author_dto } from "@/modules/authors/create_author_dto.ts";
+import { create_author_dto } from "@/modules/authors/create_author/create_author_dto.ts";
 
 export const create_author_module = new Hono();
 
