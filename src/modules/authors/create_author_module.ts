@@ -8,7 +8,7 @@ import { create_author_dto } from "@/modules/authors/create_author_dto.ts";
 
 export const create_author_module = new Hono();
 
-create_author_module.get(
+create_author_module.post(
   "/",
   verify_auth,
   verify_role(Role.admin),
