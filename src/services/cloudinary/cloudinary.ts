@@ -20,7 +20,7 @@ export class Cloudinary {
       const upload_stream = cloudinary.uploader.upload_stream(
         {
           resource_type: "auto",
-          public_id: `${folder}/${Date.now()}_${crypto.randomUUID()}`,
+          public_id: crypto.randomUUID(),
           folder,
           unique_filename: true,
         },
@@ -38,14 +38,14 @@ export class Cloudinary {
   }
 
   // si la url ya incluye el puclic_id
-  static async destroy(url: string) {
+  static async destroy(url: string, type: "image" | "video") {
     const new_url = new URL(url);
     const public_id = new_url.searchParams.get("public_id");
 
     if (!public_id) throw new CloudinaryUrlErr();
 
     return await cloudinary.uploader.destroy(public_id, {
-      resource_type: "auto",
+      resource_type: type,
     });
   }
 
