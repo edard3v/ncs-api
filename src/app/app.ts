@@ -10,6 +10,7 @@ import { refresh_login_module } from "@/modules/auth/refresh_login/refresh_login
 import { create_author_module } from "@/modules/authors/create_author/create_author_module.ts";
 import { get_author_by_id_module } from "@/modules/authors/get_author_by_id/get_author_by_id_module.ts";
 import { get_authors_module } from "@/modules/authors/get_authors/get_authors_module.ts";
+import { get_authors_with_songs_module } from "@/modules/authors/get_authors_with_songs/get_authors_with_songs_module.ts";
 
 export const app = new Hono();
 
@@ -29,6 +30,7 @@ app.route("/refresh_login", refresh_login_module);
 app.route("/create_author", create_author_module);
 app.route("/get_author_by_id", get_author_by_id_module);
 app.route("/get_authors", get_authors_module);
+app.route("/get_authors_with_songs", get_authors_with_songs_module);
 
 app.notFound(not_found_handler);
 app.onError(err_handler);
