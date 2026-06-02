@@ -21,8 +21,8 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
 
   const sql_count = `
   select
-  count(distinct authors.id) as total
-  from authors inner join songs on authors.id = songs.author_id
+  count(*) as total
+  from authors
   ${where_clause}
   `;
 
@@ -41,17 +41,9 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
   select
   authors.id,
   authors.name,
-  authors.img_url,
-  json_group_array(
-    json_object(
-      'id', songs.id,
-      'name', songs.name,
-      'song_url', songs.song_url
-    )
-  ) as songs
-  from authors inner join songs on authors.id = songs.author_id
+  authors.img_url
+  from authors
   ${where_clause}
-  group by authors.id
   order by authors.name asc
   limit ?
   offset ?
@@ -62,16 +54,11 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
     args: [...args, limit, offset],
   });
 
-  const formatted_records = result.rows.map((row) => ({
-    ...row,
-    songs: JSON.parse(row.songs as string),
-  }));
-
   return {
     total_records,
     limit,
     total_pages,
     page,
-    records: formatted_records,
+    records: result.rows,
   };
 };
