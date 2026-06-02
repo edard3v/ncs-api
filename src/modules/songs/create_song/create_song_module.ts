@@ -1,0 +1,25 @@
+import { Hono } from "hono";
+import { verify_auth } from "@/middlewares/verify_auth.ts";
+import { verify_role } from "@/middlewares/verify_role.ts";
+import { Role } from "@/enums/Role.ts";
+import { zValidator } from "@hono/zod-validator";
+import { create_song_service } from "@/modules/songs/create_song/create_song_service.ts";
+import { create_song_dto } from "@/modules/songs/create_song/create_song_dto.ts";
+
+export const create_song_module = new Hono();
+
+create_song_module.post(
+  "/",
+
+  verify_auth,
+  verify_role(Role.admin),
+  zValidator("form", create_song_dto),
+
+  async (context) => {
+    const dto = context.req.valid("form");
+    const row_affected = await create_song_service(dto);
+
+    context.status(201);
+    return context.json({ row_affected });
+  },
+);
