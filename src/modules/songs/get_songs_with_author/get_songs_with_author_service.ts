@@ -22,7 +22,13 @@ export const get_songs_with_author_service = async (params: GetSongsDto) => {
 
   const [sql_count, result] = await Promise.all([
     db.execute({
-      sql: `select count(*) as total from songs ${where_clause}`,
+      sql: `
+      select
+        count(*) as total
+      from songs 
+      inner join authors on songs.author_id = authors.id
+      ${where_clause}
+      `,
       args,
     }),
     db.execute({
@@ -33,10 +39,15 @@ export const get_songs_with_author_service = async (params: GetSongsDto) => {
         songs.song_url,
         songs.img_url,
         songs.duration,
-        songs.likes
+        songs.likes,
+        json_object(
+          'id', authors.id,
+          'name', authors.name
+        ) as author
       from songs
       inner join authors on songs.author_id = authors.id
       ${where_clause}
+      order by songs.name
       limit ?
       offset ?
     `,
@@ -48,11 +59,16 @@ export const get_songs_with_author_service = async (params: GetSongsDto) => {
 
   const total_pages = Math.ceil(total_records / limit) || 1;
 
+  const formatted_records = result.rows.map((row) => ({
+    ...row,
+    author: JSON.parse(row.author as string),
+  }));
+
   return {
     total_records,
     limit,
     total_pages,
     page,
-    records: result.rows,
+    records: formatted_records,
   };
 };
