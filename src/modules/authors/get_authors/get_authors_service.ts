@@ -16,19 +16,16 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
     args.push(`%${name}%`);
   }
 
-  const where_clause = conditions.length > 0 ? " where " + conditions.join(" and ") : "";
+  const where_clause = conditions.length > 0 ? `where ${conditions.join(" and ")}` : "";
 
-  const sql_count = await db.execute({
-    sql: `select count(*) as total from authors ${where_clause}`,
-    args,
-  });
+  const [sql_count, result] = await Promise.all([
+    db.execute({
+      sql: `select count(*) as total from authors ${where_clause}`,
+      args,
+    }),
 
-  const total_records = Number(sql_count.rows[0].total);
-
-  const total_pages = Math.ceil(total_records / limit) || 1;
-
-  const result = await db.execute({
-    sql: `
+    db.execute({
+      sql: `
       select
         authors.id,
         authors.name,
@@ -39,8 +36,13 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
       limit ?
       offset ?
     `,
-    args: [...args, limit, offset],
-  });
+      args: [...args, limit, offset],
+    }),
+  ]);
+
+  const total_records = Number(sql_count.rows[0].total);
+
+  const total_pages = Math.ceil(total_records / limit) || 1;
 
   return {
     total_records,
