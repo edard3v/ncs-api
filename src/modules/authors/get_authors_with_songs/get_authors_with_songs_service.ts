@@ -19,7 +19,7 @@ export const get_authors_with_songs_service = async (params: GetAuthorsWithSongs
   const where_clause = conditions.length > 0 ? " where " + conditions.join(" and ") : "";
 
   const [count_result, result] = await Promise.all([
-    await db.execute({
+    db.execute({
       sql: `
       select
         count(distinct authors.id) as total
@@ -29,7 +29,7 @@ export const get_authors_with_songs_service = async (params: GetAuthorsWithSongs
       args,
     }),
 
-    await db.execute({
+    db.execute({
       sql: `
       select
         authors.id,
