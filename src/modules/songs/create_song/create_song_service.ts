@@ -41,7 +41,7 @@ export const create_song_service = async (params: CreateSongDto) => {
     Promise.all([
       img_url && Cloudinary.destroy(img_url, "image"),
       song_url && Cloudinary.destroy(song_url, "video"),
-    ]).catch((e) => console.log("Fallo al borrar imagen huérfana en Cloudinary", e));
+    ]).catch((e) => console.log("Fallo al borrar imagen o audio huérfana en Cloudinary", e));
 
     throw error;
   }
