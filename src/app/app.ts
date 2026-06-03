@@ -15,6 +15,7 @@ import { delete_author_module } from "@/modules/authors/delete_author/delete_aut
 import { update_author_module } from "@/modules/authors/update_author/update_author_module.ts";
 import { create_song_module } from "@/modules/songs/create_song/create_song_module.ts";
 import { get_songs_module } from "@/modules/songs/get_songs/get_songs_module.ts";
+import { get_songs_with_author_module } from "@/modules/songs/get_songs_with_author/get_songs_with_author_module.ts";
 
 export const app = new Hono();
 
@@ -40,6 +41,7 @@ app.route("/update_author", update_author_module);
 
 app.route("/create_song", create_song_module);
 app.route("/get_songs", get_songs_module);
+app.route("/get_songs_with_author", get_songs_with_author_module);
 
 app.notFound(not_found_handler);
 app.onError(err_handler);

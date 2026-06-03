@@ -1,7 +1,7 @@
 import { GetSongsDto } from "@/modules/songs/get_songs/get_songs_dto.ts";
 import { db } from "@/db/db.ts";
 
-export const get_songs_service = async (params: GetSongsDto) => {
+export const get_songs_with_author_service = async (params: GetSongsDto) => {
   const { name, author_id, page = 1, limit = 5 } = params;
 
   const conditions: string[] = [];
@@ -32,14 +32,14 @@ export const get_songs_service = async (params: GetSongsDto) => {
   const result = await db.execute({
     sql: `
       select
-        id,
-        name,
-        song_url,
-        img_url,
-        duration,
-        likes,
-        author_id
+        songs.id,
+        songs.name,
+        songs.song_url,
+        songs.img_url,
+        songs.duration,
+        songs.likes
       from songs
+      inner join authors on songs.author_id = authors.id
       ${where_clause}
       limit ?
       offset ?

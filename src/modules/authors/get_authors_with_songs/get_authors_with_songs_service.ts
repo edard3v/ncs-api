@@ -1,6 +1,5 @@
 import { db } from "@/db/db.ts";
 import { PageErr } from "@/errors/PageErr.ts";
-import { Record404 } from "@/errors/Record404.ts";
 import { GetAuthorsWithSongsDto } from "@/modules/authors/get_authors_with_songs/get_authors_with_songs_dto.ts";
 
 export const get_authors_with_songs_service = async (params: GetAuthorsWithSongsDto) => {
@@ -32,8 +31,6 @@ export const get_authors_with_songs_service = async (params: GetAuthorsWithSongs
   });
 
   const total_records = Number(count_result.rows[0].total);
-
-  if (!total_records) throw new Record404();
 
   const total_pages = Math.ceil(total_records / limit) || 1;
 
