@@ -1,26 +1,28 @@
-import { GetAuthorsDto } from "@/modules/authors/get_authors/get_authors_dto.ts";
+import { GetSongsDto } from "@/modules/songs/get_songs/get_songs_dto.ts";
 import { db } from "@/db/db.ts";
-import { PageErr } from "@/errors/PageErr.ts";
 import { Record404 } from "@/errors/Record404.ts";
 
-export const get_authors_service = async (params: GetAuthorsDto) => {
-  const { name, limit = 5, page = 1 } = params;
-
-  if (!page) throw new PageErr();
+export const get_songs_service = async (params: GetSongsDto) => {
+  const { name, author_id, page = 1, limit = 5 } = params;
 
   const conditions: string[] = [];
   const args: string[] = [];
   const offset = (page - 1) * limit;
 
   if (name) {
-    conditions.push("authors.name like ?");
+    conditions.push("songs.name like ?");
     args.push(`%${name}%`);
   }
 
-  const where_clause = conditions.length > 0 ? " where " + conditions.join(" and ") : "";
+  if (author_id) {
+    conditions.push("songs.author_id = ?");
+    args.push(author_id);
+  }
+
+  const where_clause = conditions.length > 0 ? `where ${conditions.join(" and ")}` : "";
 
   const sql_count = await db.execute({
-    sql: `select count(*) as total from authors ${where_clause}`,
+    sql: `select count(*) as total from songs ${where_clause}`,
     args,
   });
 
@@ -33,12 +35,15 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
   const result = await db.execute({
     sql: `
       select
-        authors.id,
-        authors.name,
-        authors.img_url
-      from authors
+        id,
+        name,
+        song_url,
+        img_url,
+        duration,
+        likes,
+        author_id
+      from songs
       ${where_clause}
-      order by authors.name asc
       limit ?
       offset ?
     `,
