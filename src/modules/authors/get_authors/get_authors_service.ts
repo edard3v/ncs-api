@@ -18,7 +18,7 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
 
   const where_clause = conditions.length > 0 ? `where ${conditions.join(" and ")}` : "";
 
-  const [sql_count, result] = await Promise.all([
+  const [count_result, result] = await Promise.all([
     db.execute({
       sql: `select count(*) as total from authors ${where_clause}`,
       args,
@@ -40,7 +40,7 @@ export const get_authors_service = async (params: GetAuthorsDto) => {
     }),
   ]);
 
-  const total_records = Number(sql_count.rows[0].total);
+  const total_records = Number(count_result.rows[0].total);
 
   const total_pages = Math.ceil(total_records / limit) || 1;
 
