@@ -17,6 +17,7 @@ import { create_song_module } from "@/modules/songs/create_song/create_song_modu
 import { get_songs_module } from "@/modules/songs/get_songs/get_songs_module.ts";
 import { get_songs_with_author_module } from "@/modules/songs/get_songs_with_author/get_songs_with_author_module.ts";
 import { get_song_by_id_module } from "@/modules/songs/get_song_by_id/get_song_by_id_module.ts";
+import { update_song_module } from "@/modules/songs/update_song/update_song_module.ts";
 
 export const app = new Hono();
 
@@ -44,6 +45,7 @@ app.route("/create_song", create_song_module);
 app.route("/get_songs", get_songs_module);
 app.route("/get_songs_with_author", get_songs_with_author_module);
 app.route("/get_song_by_id", get_song_by_id_module);
+app.route("/update_song", update_song_module);
 
 app.notFound(not_found_handler);
 app.onError(err_handler);
