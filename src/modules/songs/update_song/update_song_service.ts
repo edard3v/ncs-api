@@ -3,34 +3,55 @@ import { UuidZod } from "@/services/zod/uuid_zod.ts";
 import { db } from "@/db/db.ts";
 import { Record404 } from "@/errors/Record404.ts";
 import { Cloudinary } from "@/services/cloudinary/cloudinary.ts";
-import { SONGS_IMGS } from "@/services/cloudinary/paths_to_upload_cloudinary.ts";
-import { DtoErr } from "@/errors/DtoErr.ts";
+import { SONGS_AUDIOS, SONGS_IMGS } from "@/services/cloudinary/paths_to_upload_cloudinary.ts";
+import { CloudinaryErr } from "@/errors/CloudinaryErr.ts";
 
 export const update_song_service = async (song_id: UuidZod, params: UpdateSongDto) => {
   const select_song = await db.execute({
-    sql: "select id, song_url, img_url from song where id = ?",
+    sql: "select id, img_url, song_url from songs where id = ?",
     args: [song_id],
   });
 
   const song = select_song.rows[0];
-
   if (!song) throw new Record404();
+
+  const old_img_url = song.img_url;
+  const old_song_url = song.song_url;
 
   const { name, duration, img_file, song_file } = params;
 
   const sets: string[] = [];
   const args: (string | number)[] = [];
   let new_img_url = "";
+  let new_song_url = "";
 
-  if (img_file) {
-    const { url, public_id } = await Cloudinary.upload(img_file, SONGS_IMGS);
-    new_img_url = `${url}?public_id=${public_id}`;
-
-    sets.push("img_url = ?");
-    args.push(new_img_url);
-  }
+  const [p1, p2] = await Promise.allSettled([
+    img_file && Cloudinary.upload(img_file, SONGS_IMGS),
+    song_file && Cloudinary.upload(song_file, SONGS_AUDIOS),
+  ]);
 
   try {
+    if (p1.status === "fulfilled" && p1.value) {
+      new_img_url = `${p1.value.url}?public_id=${p1.value.public_id}`;
+    }
+
+    if (p2.status === "fulfilled" && p2.value) {
+      new_song_url = `${p2.value.url}?public_id=${p2.value.public_id}`;
+    }
+
+    if (p1.status === "rejected" || p2.status === "rejected") {
+      throw new CloudinaryErr();
+    }
+
+    if (img_file) {
+      sets.push("img_url = ?");
+      args.push(new_img_url);
+    }
+    if (song_file) {
+      sets.push("song_url = ?");
+      args.push(new_song_url);
+    }
+
     if (name) {
       sets.push("name = ?");
       args.push(name);
@@ -41,31 +62,23 @@ export const update_song_service = async (song_id: UuidZod, params: UpdateSongDt
       args.push(duration);
     }
 
-    if (sets.length === 0) throw new DtoErr(); // no es necesario, pero por las dudas lo dejo xD
-
     args.push(song_id);
     const result = await db.execute({
       sql: `update songs set ${sets.join(", ")} where id = ?`,
       args,
     });
 
-    if (img_file && song.img_url) {
-      const old_img_url = song.img_url as string;
-      Cloudinary.destroy(old_img_url, "image").catch((err) => {
-        console.error(`[Fondo] Fallo al borrar imagen vieja en Cloudinary (${old_img_url}):`, err);
-      });
-    }
+    Promise.all([
+      new_img_url && old_img_url && Cloudinary.destroy(old_img_url as string, "image"),
+      new_song_url && old_song_url && Cloudinary.destroy(old_song_url as string, "video"),
+    ]).catch((e) => console.log("Fallo al borrar imagen o audio huérfana en Cloudinary", e));
 
     return result.rowsAffected;
   } catch (error) {
-    if (new_img_url) {
-      Cloudinary.destroy(new_img_url, "image").catch((err) => {
-        console.error(
-          `[Fondo] Fallo al borrar imagen huérfana en Cloudinary (${new_img_url}):`,
-          err,
-        );
-      });
-    }
+    Promise.all([
+      new_img_url && Cloudinary.destroy(new_img_url, "image"),
+      new_song_url && Cloudinary.destroy(new_song_url, "video"),
+    ]).catch((e) => console.log("Fallo al borrar imagen o audio huérfana en Cloudinary", e));
 
     throw error;
   }

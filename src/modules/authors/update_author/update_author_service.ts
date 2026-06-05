@@ -18,6 +18,7 @@ export const update_author_service = async (author_id: UuidZod, params: UpdateAu
   if (!select_author.rows.length) throw new Record404();
 
   const author = select_author.rows[0];
+  const old_img_url = author.img_url;
 
   const sets: string[] = [];
   const args: string[] = [];
@@ -45,9 +46,8 @@ export const update_author_service = async (author_id: UuidZod, params: UpdateAu
       args,
     });
 
-    if (img_file && author.img_url) {
-      const old_img_url = author.img_url as string;
-      Cloudinary.destroy(old_img_url, "image").catch((err) => {
+    if (new_img_url && old_img_url) {
+      Cloudinary.destroy(old_img_url as string, "image").catch((err) => {
         console.error(`[Fondo] Fallo al borrar imagen vieja en Cloudinary (${old_img_url}):`, err);
       });
     }
