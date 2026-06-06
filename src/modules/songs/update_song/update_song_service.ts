@@ -5,8 +5,13 @@ import { Record404 } from "@/errors/Record404.ts";
 import { Cloudinary } from "@/services/cloudinary/cloudinary.ts";
 import { SONGS_AUDIOS, SONGS_IMGS } from "@/services/cloudinary/paths_to_upload_cloudinary.ts";
 import { CloudinaryErr } from "@/errors/CloudinaryErr.ts";
+import { DtoErr } from "@/errors/DtoErr.ts";
 
 export const update_song_service = async (song_id: UuidZod, params: UpdateSongDto) => {
+  const { name, duration, img_file, song_file } = params;
+
+  if (!name && !duration && !img_file && !song_file) throw new DtoErr();
+
   const select_song = await db.execute({
     sql: "select id, img_url, song_url from songs where id = ?",
     args: [song_id],
@@ -17,8 +22,6 @@ export const update_song_service = async (song_id: UuidZod, params: UpdateSongDt
 
   const old_img_url = song.img_url;
   const old_song_url = song.song_url;
-
-  const { name, duration, img_file, song_file } = params;
 
   const sets: string[] = [];
   const args: (string | number)[] = [];
@@ -71,7 +74,14 @@ export const update_song_service = async (song_id: UuidZod, params: UpdateSongDt
     Promise.all([
       new_img_url && old_img_url && Cloudinary.destroy(old_img_url as string, "image"),
       new_song_url && old_song_url && Cloudinary.destroy(old_song_url as string, "video"),
-    ]).catch((e) => console.log("Fallo al borrar imagen o audio huérfana en Cloudinary", e));
+    ]).catch((e) =>
+      console.log(
+        "Fallo al borrar imagen o audio huérfana en Cloudinary",
+        old_img_url,
+        old_song_url,
+        e,
+      ),
+    );
 
     return result.rowsAffected;
   } catch (error) {

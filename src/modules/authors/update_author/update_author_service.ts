@@ -48,7 +48,7 @@ export const update_author_service = async (author_id: UuidZod, params: UpdateAu
 
     if (new_img_url && old_img_url) {
       Cloudinary.destroy(old_img_url as string, "image").catch((err) => {
-        console.error(`[Fondo] Fallo al borrar imagen vieja en Cloudinary (${old_img_url}):`, err);
+        console.error("Fallo al borrar imagen vieja en Cloudinary):", old_img_url, err);
       });
     }
 

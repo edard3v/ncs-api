@@ -9,8 +9,8 @@ import { update_song_service } from "@/modules/songs/update_song/update_song_ser
 
 export const update_song_module = new Hono();
 
-update_song_module.get(
-  "/id",
+update_song_module.patch(
+  "/:id",
 
   verify_auth,
   verify_role(Role.admin),
