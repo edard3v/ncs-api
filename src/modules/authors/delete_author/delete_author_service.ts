@@ -5,7 +5,7 @@ import { Cloudinary } from "@/services/cloudinary/cloudinary.ts";
 
 export const delete_author_service = async (author_id: UuidZod) => {
   const sql_author_to_remove = await db.execute({
-    sql: "select * from authors where id = ?",
+    sql: "select img_url from authors where id = ?",
     args: [author_id],
   });
 
